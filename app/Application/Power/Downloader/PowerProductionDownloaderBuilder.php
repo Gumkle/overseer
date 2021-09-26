@@ -2,9 +2,18 @@
 
 namespace App\Application\Power\Downloader;
 
-use App\Application\Models\PowerPlant;
+use Closure;
+use DateTimeImmutable;
 
 interface PowerProductionDownloaderBuilder
 {
-    public function buildPowerProductionDownloaderFor(PowerPlant $plant): PowerProductionDownloader;
+    public function producer(string $producer): PowerProductionDownloaderBuilder;
+
+    public function since(DateTimeImmutable $since): PowerProductionDownloaderBuilder;
+
+    public function until(DateTimeImmutable $until): PowerProductionDownloaderBuilder;
+
+    public function chunked(Closure $closure, int $chunkSize = 100): PowerProductionDownloaderBuilder;
+
+    public function build(): PowerProductionDownloader;
 }

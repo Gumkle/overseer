@@ -175,6 +175,15 @@ return [
         App\Infrastructure\Providers\EventServiceProvider::class,
         App\Infrastructure\Providers\RouteServiceProvider::class,
 
+
+        App\Infrastructure\Providers\BrowserConfigProvider::class,
+        App\Infrastructure\Providers\DataConfigProvider::class,
+        App\Infrastructure\Providers\BrowserServiceProvider::class,
+        App\Infrastructure\Providers\PasswordEncrypterProvider::class,
+        App\Infrastructure\Providers\RepositoryServiceProvider::class,
+        App\Infrastructure\Providers\DownloaderServiceProvider::class,
+
+
     ],
 
     /*

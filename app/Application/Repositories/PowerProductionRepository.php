@@ -8,8 +8,8 @@ use DateTimeImmutable;
 
 interface PowerProductionRepository
 {
-    public function getLastDayOfReads(PowerPlant $plant): DateTimeImmutable;
+    public function getLastReadTimeForPlant(PowerPlant $plant): ?DateTimeImmutable;
 
     /** @param PowerProduction[] $powerProduction */
-    public function savePowerProduction(array $powerProduction);
+    public function savePowerProduction(array $powerProduction): void;
 }

@@ -9,36 +9,46 @@ use DateTimeImmutable;
 
 class UpdatePowerProductionReads
 {
+    private const DOWNLOAD_CHUNK_SIZE = 1000;
+
     public function __construct(
         private PowerPlantRepository $powerPlantRepository,
         private PowerProductionDownloaderBuilder $powerProductionDownloaderBuilder,
         private PowerProductionRepository $powerProductionRepository
     ) {}
 
-    public function update(): array
+    public function update(): void
     {
         $plants = $this->powerPlantRepository->getAllPlants();
 
         foreach($plants as $plant) {
 
+            $lastReadsTime = $this->powerProductionRepository
+                ->getLastReadTimeForPlant($plant);
+
             $downloader = $this->powerProductionDownloaderBuilder
-                ->buildPowerProductionDownloaderFor($plant);
-
-            $lastDayOfReads = $this->powerProductionRepository
-                ->getLastDayOfReads($plant);
-
-            $powerProduction = $downloader
-                ->since($lastDayOfReads)
+                ->producer($plant->producer())
+                ->since($lastReadsTime)
                 ->until($this->today())
-                ->downloadPowerProduction($plant);
+                ->chunked(
+                    function (array $chunk) {
+                        foreach($chunk as $item) {
+                            echo $item->id() . " produced at " . $item->dateTime()->format('Y-m-d H:i') . " gave " . $item->powerValue() . "\n";
+                            usleep(100000);
+                        }
+                        echo "Koniec czanka C:\n";
+//                        $this->powerProductionRepository
+//                            ->savePowerProduction($chunk);
+                    },
+                    self::DOWNLOAD_CHUNK_SIZE
+                )
+                ->build();
 
-            $this->powerProductionRepository
-                ->savePowerProduction($powerProduction);
-
+            $downloader->downloadFor($plant);
         }
     }
 
-    private function today()
+    private function today(): DateTimeImmutable
     {
         return new DateTimeImmutable();
     }

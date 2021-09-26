@@ -16,7 +16,10 @@ class PowerPlants extends Migration
         Schema::create('power_plants', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('own_name')->unique();
+            $table->string('username');
+            $table->string('password');
             $table->string('producer_id');
+            $table->string('producer');
             $table->date('installation_date');
             $table->decimal('lon', 10, 7);
             $table->decimal('lat', 10, 7);
