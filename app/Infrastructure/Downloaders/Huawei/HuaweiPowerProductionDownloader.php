@@ -41,11 +41,13 @@ class HuaweiPowerProductionDownloader implements PowerProductionDownloader
             ));
         }
         $this->flushCurrentChunk();
+        // todo add closing for page and browser
     }
 
     /** @return PowerProduction[] */
     private function extractPowerProductionData(array $dataSourceResponse, PowerPlant $plant): array
     {
+        // todo couldn't we include this array call in configuration? So that if api response changes we will edit only config files
         $dates = $dataSourceResponse['data']['xAxis'];
         $powers = $dataSourceResponse['data']['productPower'];
         $result = [];
@@ -57,9 +59,9 @@ class HuaweiPowerProductionDownloader implements PowerProductionDownloader
                 DateTimeImmutable::createFromFormat(
                     $this->fusionSolarDataConfig->powerReadDateFormat(),
                     $date
-                ),
+                ), // todo add error handling when format changes - this static function will return false then
                 $power,
-                Unit::KWH()
+                Unit::KWH() // todo add recognizing unit
             );
             $result[] = $powerProduction;
         }

@@ -34,8 +34,9 @@ class UpdatePowerProductionReads
                     function (array $chunk) {
                         foreach($chunk as $item) {
                             echo $item->id() . " produced at " . $item->dateTime()->format('Y-m-d H:i') . " gave " . $item->powerValue() . "\n";
-                            usleep(100000);
+                            usleep(50000);
                         }
+                        // todo what the bloody moose is happening here, get the database write back
                         echo "Koniec czanka C:\n";
 //                        $this->powerProductionRepository
 //                            ->savePowerProduction($chunk);
