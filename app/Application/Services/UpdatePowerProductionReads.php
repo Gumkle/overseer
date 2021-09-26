@@ -17,7 +17,7 @@ class UpdatePowerProductionReads
         private PowerProductionRepository $powerProductionRepository
     ) {}
 
-    public function update(): void
+    public function handle(): void
     {
         $plants = $this->powerPlantRepository->getAllPlants();
 
