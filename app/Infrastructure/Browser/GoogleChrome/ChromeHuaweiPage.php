@@ -47,4 +47,9 @@ class ChromeHuaweiPage implements HuaweiPage
             ->getReturnValue();
         return json_decode($html, true);
     }
+
+    public function __destruct()
+    {
+        $this->libraryPage->close();
+    }
 }

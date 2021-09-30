@@ -12,15 +12,15 @@ use HeadlessChromium\Browser as LibraryBrowser;
 class ChromeBrowser implements Browser
 {
     public function __construct(
-        private LibraryBrowser $browser,
-        private BrowserConfig $config,
+        private LibraryBrowser    $libraryBrowser,
+        private BrowserConfig     $config,
         private PasswordEncrypter $encrypter
     )
     {}
 
     public function openHuaweiPage(PowerPlant $plant): HuaweiPage
     {
-        $page = $this->browser->createPage();
+        $page = $this->libraryBrowser->createPage();
         $page->navigate($this->config->links()->huawei()->mainPage())->waitForNavigation();
         return new ChromeHuaweiPage(
             $page,
@@ -28,5 +28,10 @@ class ChromeBrowser implements Browser
             $this->encrypter,
             $plant
         );
+    }
+
+    public function __destruct()
+    {
+        $this->libraryBrowser->close();
     }
 }

@@ -41,7 +41,6 @@ class HuaweiPowerProductionDownloader implements PowerProductionDownloader
             ));
         }
         $this->flushCurrentChunk();
-        // todo add closing for page and browser
     }
 
     /** @return PowerProduction[] */
