@@ -66,7 +66,7 @@ class HuaweiPowerProductionDownloader implements PowerProductionDownloader
                     $date
                 ), // todo add error handling when format changes - this static function will return false then
                 $power,
-                Unit::KWH() // todo add recognizing unit
+                Unit::KWH()
             );
             $result[] = $powerProduction;
         }
