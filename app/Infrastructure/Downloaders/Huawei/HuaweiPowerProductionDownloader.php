@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Downloaders\Huawei;
 
+use App\Application\Exceptions\UpdatePowerProductionReadsException;
 use App\Application\Models\Enum\Unit;
 use App\Application\Models\PowerPlant;
 use App\Application\Models\PowerProduction;
@@ -58,13 +59,22 @@ class HuaweiPowerProductionDownloader implements PowerProductionDownloader
         $result = [];
         foreach ($dates as $key => $date) {
             $power = is_numeric($powers[$key]) ? $powers[$key] : 0.0;
+
+            $refinedDate = DateTimeImmutable::createFromFormat(
+                $this->fusionSolarDataConfig->powerReadDateFormat(),
+                $date
+            );
+
+            if ($refinedDate === false) {
+                throw new UpdatePowerProductionReadsException(
+                    "Failed to read date from data source. Probably date format has changed."
+                );
+            }
+
             $powerProduction = new PowerProduction(
                 Uuid::uuid4(),
                 $plant->id(),
-                DateTimeImmutable::createFromFormat(
-                    $this->fusionSolarDataConfig->powerReadDateFormat(),
-                    $date
-                ), // todo add error handling when format changes - this static function will return false then
+                $refinedDate,
                 $power,
                 Unit::KWH()
             );
