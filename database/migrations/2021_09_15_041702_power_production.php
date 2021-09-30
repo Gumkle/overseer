@@ -20,6 +20,7 @@ class PowerProduction extends Migration
             $table->double('power', $precision = 10, $scale = 3);
             $table->enum('unit', ['Wh', 'kWh', 'MWH', 'GWh']);
 
+            $table->unique(['id', 'measured_at']);
             $table->foreign('power_plant_id')->references('id')->on('power_plants');
         });
     }

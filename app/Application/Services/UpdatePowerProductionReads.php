@@ -32,14 +32,9 @@ class UpdatePowerProductionReads
                 ->until($this->today())
                 ->chunked(
                     function (array $chunk) {
-                        foreach($chunk as $item) {
-                            echo $item->id() . " produced at " . $item->dateTime()->format('Y-m-d H:i') . " gave " . $item->powerValue() . "\n";
-                            usleep(50000);
-                        }
-                        // todo what the bloody moose is happening here, get the database write back
-                        echo "Koniec czanka C:\n";
-//                        $this->powerProductionRepository
-//                            ->savePowerProduction($chunk);
+                        $this->powerProductionRepository
+                            ->savePowerProduction($chunk);
+                        echo "Just saved one chunk to db";
                     },
                     self::DOWNLOAD_CHUNK_SIZE
                 )
