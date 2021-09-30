@@ -33,7 +33,7 @@ class EloquentPowerProductionRepository implements PowerProductionRepository
             ];
         }, $powerProduction);
 
-        DB::table('power_production')->upsert($powerProduction, ['id', 'measured_at']);
+        DB::table('power_production')->upsert($powerProduction, ['measured_at']);
     }
 
     public function getLastReadTimeForPlant(PowerPlant $plant): ?DateTimeImmutable
