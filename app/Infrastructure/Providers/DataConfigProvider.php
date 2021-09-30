@@ -10,10 +10,12 @@ class DataConfigProvider extends ServiceProvider implements DeferrableProvider
 {
     public function register()
     {
-        $this->app->bind(FusionSolarDataConfig::class, function() {
+        $this->app->bind(FusionSolarDataConfig::class, function () {
             return new FusionSolarDataConfig(
                 config('dataStructure.huaweiFusionSolar.powerReadDateFormat'),
-                config('dataStructure.huaweiFusionSolar.powerReadInterval')
+                config('dataStructure.huaweiFusionSolar.powerReadInterval'),
+                config('dataStructure.huaweiFusionSolar.datesResponsePath'),
+                config('dataStructure.huaweiFusionSolar.powerResponsePath'),
             );
         });
     }

@@ -6,6 +6,7 @@ use App\Application\Models\PowerPlant;
 use App\Infrastructure\Browser\Interfaces\HuaweiPage;
 use App\Infrastructure\Config\BrowserConfig;
 use App\Infrastructure\Cryptography\PasswordEncrypter;
+use App\Infrastructure\Downloaders\DataSourceResponse;
 use DateTimeImmutable;
 use HeadlessChromium\Page;
 
@@ -34,7 +35,7 @@ class ChromeHuaweiPage implements HuaweiPage
             ->waitForPageReload();
     }
 
-    public function openDataSourceWithTimeSince(DateTimeImmutable $currentTime): array
+    public function openDataSourceWithTimeSince(DateTimeImmutable $currentTime): DataSourceResponse
     {
         $restResponseContentSelector = $this->config->selectors()->huawei()->restResponse();
         $this->libraryPage
@@ -45,7 +46,8 @@ class ChromeHuaweiPage implements HuaweiPage
         $html = $this->libraryPage
             ->evaluate("document.querySelector(\"$restResponseContentSelector\").textContent")
             ->getReturnValue();
-        return json_decode($html, true);
+        $rawResponse = json_decode($html, true);
+        return new DataSourceResponse($rawResponse);
     }
 
     public function __destruct()

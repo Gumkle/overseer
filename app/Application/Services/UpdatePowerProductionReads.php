@@ -34,7 +34,6 @@ class UpdatePowerProductionReads
                     function (array $chunk) {
                         $this->powerProductionRepository
                             ->savePowerProduction($chunk);
-                        echo "Just saved one chunk to db";
                     },
                     self::DOWNLOAD_CHUNK_SIZE
                 )

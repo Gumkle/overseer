@@ -8,6 +8,7 @@ use App\Application\Models\PowerProduction;
 use App\Application\Power\Downloader\PowerProductionDownloader;
 use App\Infrastructure\Browser\Interfaces\Browser;
 use App\Infrastructure\Config\FusionSolarDataConfig;
+use App\Infrastructure\Downloaders\DataSourceResponse;
 use Closure;
 use DateInterval;
 use DateTimeImmutable;
@@ -20,11 +21,13 @@ class HuaweiPowerProductionDownloader implements PowerProductionDownloader
     public function __construct(
         private Browser               $browser,
         private FusionSolarDataConfig $fusionSolarDataConfig,
-        private DateTimeImmutable    $since,
-        private DateTimeImmutable    $until,
-        private int                  $maxChunkSize,
-        private Closure              $chunkCallback
-    ) {}
+        private DateTimeImmutable     $since,
+        private DateTimeImmutable     $until,
+        private int                   $maxChunkSize,
+        private Closure               $chunkCallback
+    )
+    {
+    }
 
     public function downloadFor(PowerPlant $plant): void
     {
@@ -44,11 +47,14 @@ class HuaweiPowerProductionDownloader implements PowerProductionDownloader
     }
 
     /** @return PowerProduction[] */
-    private function extractPowerProductionData(array $dataSourceResponse, PowerPlant $plant): array
+    private function extractPowerProductionData(DataSourceResponse $dataSourceResponse, PowerPlant $plant): array
     {
-        // todo couldn't we include this array call in configuration? So that if api response changes we will edit only config files
-        $dates = $dataSourceResponse['data']['xAxis'];
-        $powers = $dataSourceResponse['data']['productPower'];
+        $dates = $dataSourceResponse->arrayFromPath(
+            $this->fusionSolarDataConfig->datesResponsePath()
+        );
+        $powers = $dataSourceResponse->arrayFromPath(
+            $this->fusionSolarDataConfig->powerResponsePath()
+        );
         $result = [];
         foreach ($dates as $key => $date) {
             $power = is_numeric($powers[$key]) ? $powers[$key] : 0.0;
