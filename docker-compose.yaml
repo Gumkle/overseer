@@ -1,4 +1,5 @@
 version: "3.9"
+
 services:
   nginx:
     image: nginx:1.19
@@ -8,6 +9,8 @@ services:
       - ./docker/nginx/logs:/var/log/nginx
     ports:
       - "80:80"
+    networks:
+      overseer: { }
 
   database:
     image: mysql:8.0
@@ -16,9 +19,19 @@ services:
       MYSQL_DATABASE: overseer
     volumes:
       - ./docker/mysql/data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      overseer: { }
 
   application:
     build: .
     volumes:
       - .:/var/www/html
+    networks:
+      overseer: { }
 
+networks:
+  overseer:
+    driver: bridge
+    name: overseer

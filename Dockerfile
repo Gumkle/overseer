@@ -4,7 +4,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
     php -r "unlink('composer-setup.php');" && \
     mv composer.phar /bin/composer
 RUN apt update -y && apt install -y git libzip-dev
-RUN docker-php-ext-install sockets zip
+RUN docker-php-ext-install sockets zip pdo pdo_mysql
 
 ADD entrypoint.sh /var/www/html/entrypoint.sh
 
