@@ -21,7 +21,7 @@ class ChromeHuaweiPage implements HuaweiPage
 
     public function login(): void
     {
-        $username = $this->powerPlant->username();
+        $username = $this->encrypter->decrypt($this->powerPlant->username());
         $password = $this->encrypter->decrypt($this->powerPlant->password());
 
         $usernameInputSelector = $this->config->selectors()->huawei()->loginInput();
