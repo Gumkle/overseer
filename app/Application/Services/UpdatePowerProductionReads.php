@@ -5,6 +5,7 @@ namespace App\Application\Services;
 use App\Application\Power\Downloader\PowerProductionDownloaderBuilder;
 use App\Application\Repositories\PowerPlantRepository;
 use App\Application\Repositories\PowerProductionRepository;
+use DateInterval;
 use DateTimeImmutable;
 
 class UpdatePowerProductionReads
@@ -24,7 +25,8 @@ class UpdatePowerProductionReads
         foreach($plants as $plant) {
 
             $lastReadsTime = $this->powerProductionRepository
-                ->getLastReadTimeForPlant($plant);
+                ->getLastReadTimeForPlant($plant)
+                ->sub(DateInterval::createFromDateString('1 day'));
 
             $downloader = $this->powerProductionDownloaderBuilder
                 ->producer($plant->producer())
